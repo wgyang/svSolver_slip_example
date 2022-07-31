@@ -1,0 +1,210 @@
+### File generated from solver.inp_meta automatically###
+### Date : 2010-03-18 17:34:30.925375
+### Common name : ALG
+### Comment : Puls header
+#### END OF HEADER ###
+
+
+# PHASTA Version 1.5 Input File
+#
+#  Basic format is
+#
+#    Key Phrase  :  Acceptable Value (integer, double, logical, or phrase
+#                                     list of integers, list of doubles )
+#
+
+# To find the Key Phrases, first look in input.config.  There you will
+# find the default values for everything that is allowed to have a
+# default. Some things are not allowed to default and must be entered
+# in this file.  In most cases, the acceptable inputs also appear in
+# the input.config file. To add acceptable inputs you should only have
+# to modify:
+
+#     input_asci.cc :which matches the string and translates it to the 
+#                    parameter change. If it is a new parameter, you must
+#                    modify:
+#
+#                      common.h (to carry new parameter through code)
+#                      common_c.h (to carry the parameter from C to Fortran)
+#     
+#
+# In case it is not clear by now, # allows you to comment either from the 
+# beginning of the line or to the right as shown below.
+#
+#SOLUTION CONTROL <--- These are for your organizational clarity (not required)
+#{                 <---
+     Equation of State: Incompressible     # sets ipress=-1 matflag(1,n)
+     Number of Timesteps: 100      #replaces nsteps(1) (ntseq wired =1)
+     Time Step Size: 0.001  # Delt(1)
+     Print ybar: True
+#     Turbulence Model:  RANS         #  No-Model iturb=0, RANS =-1  LES=1 
+#}
+
+BCT Matching Type: Coordinates
+Print Error Indicators: True
+#MATERIAL PROPERTIES
+#{
+     Viscosity: 0.04      # fills datmat (2 values REQUIRED if iLset=1)
+     Density: 1.06               # ditto
+#     Scalar Diffusivity: 0.1    # fills scdiff(1:nsclrS)
+#}
+
+OUTPUT CONTROL
+{
+     Number of Timesteps between Restarts: 10 #replaces nout/ntout
+}
+
+CARDIOVASCULAR MODELING PARAMETERS
+{
+
+
+        Slip Wall: True
+        Slip Length: 0.8
+	Time Varying Boundary Conditions From File: True # F itvn=0 T itvn=1
+        BCT Time Scale Factor : 1.0
+	Number of Coupled Surfaces: 1 # icardio
+	Pressure Coupling: Implicit # Explicit, Implicit, P-Implicit 
+                            # none ipvsq=0, expl ipvsq=1, 
+                            # impl ipvsq=2, P-Imp ipvsq=3	
+        Inflow Coupling: False # False incp=0, True incp=1
+        Number of Coupled Inflow Surfaces: 0 # numINCPSrfs
+        List of Coupled Inflow Surfaces: # nsrflistINCP(j)
+        Inflow Parameters From File: False # False incpfile=0, True incpfile=1 
+	Number of Resistance Surfaces: 0 # numResistSrfs	
+	List of Resistance Surfaces:  # nsrflistResist(j), j=0,MAXSURF 
+	Resistance Values :   # ValueListResist(j),j=1,icardio
+	Number of Impedance Surfaces: 0 # numImpSrfs	
+	List of Impedance Surfaces: # nsrflistImp(j), j=0,MAXSURF
+	Impedance From File: False #False impfile=0, True impfile=1
+        Number of RCR Surfaces: 0 # numRCRSrfs
+	List of RCR Surfaces: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42  # nsrflistRCR(j), j=0,MAXSURF
+        RCR Values From File: True #False ircrfile=0, True ircrfile=1
+        Number of Coronary Surfaces: 0 # numCORSrfs
+        List of Coronary Surfaces:  # nsrflistCOR(j), j=0,MAXSURF
+        Coronary Values From File: False #False icorfile=0, True icorfile=1
+        Number of Surfaces which zero out in-plane tractions: 1 # numVisFluxSrfs
+        List of Surfaces which zero out in-plane tractions: 3      # nsrflistVisFlux(j), j=0,MAXSURF
+        Number of Surfaces which Output Pressure and Flow: 1 # numCalcSrfs
+        List of Output Surfaces: 3  # nsrflistCalc(j), j=0, MAXSURF
+        Lagrange Multipliers:  # False Lagrange=0, True Lagrange=1
+        Number of Constrained Surfaces: 0 # numLagrangeSrfs
+        List of Constrained Surfaces:  # nsrflistLagrange(j)  
+        Constrained Surface Information From File: True #False iLagfile=0, True iLagfile=1  
+	Residual Control: True # False ResControl=0, True ResControl=1
+    	Residual Criteria: 0.00457 # ResCriteria 
+    	Minimum Required Iterations: 3 # MinNumIter
+        Deformable Wall: False #False ideformwall=0, True ideformwall=1
+        Density of Vessel Wall: 1.0 # rhovw
+        Thickness of Vessel Wall: 0.1 # thicknessvw
+        Young Mod of Vessel Wall: 6216000.0 # evw
+	Poisson Ratio of Vessel Wall: 0.5 # rnuvw
+	Shear Constant of Vessel Wall: 0.833333 # rshearconstantvw
+	Wall Mass Matrix for LHS: True   # iwallmassfactor=1
+#	Wall Mass Matrix for LHS: False  # iwallmassfactor=0
+	Wall Stiffness Matrix for LHS: True   # iwallstiffactor=1
+#	Wall Stiffness Matrix for LHS: False  # iwallstiffactor=0
+    Backflow Stabilization Coefficient: 0.4
+        }
+
+#LINEAR SOLVER
+#{
+     Number of Solves per Left-hand-side Formation: 1  #nupdat/LHSupd(1)
+     Tolerance on Momentum Equations: 0.05
+     Tolerance on Continuity Equations: 0.1
+     Tolerance on svLS NS Solver: 0.1
+#}
+
+#DISCRETIZATION CONTROL
+#{
+      Solver Type: svLS
+#     Solver Type: ACUSIM
+#     Solver Type: ACUSIM with P Projection
+     Basis Function Order: 1                 # ipord
+     Quadrature Rule on Interior: 2           #int(1)
+     Quadrature Rule on Boundary: 2           #intb(1)
+     Include Viscous Correction in Stabilization: True    # if p=1 idiff=1
+                                                           # if p=2 idiff=2  
+     Lumped Mass Fraction on Left-hand-side: 0.0           # flmpl
+     Lumped Mass Fraction on Right-hand-side: 0.0          # flmpr
+     Time Integration Rule: Second Order    # Second Order sets rinf next
+     Time Integration Rho Infinity: 0.5     # rinf(1) Only used for 2nd order
+    Flow Advection Form: Convective        # iconvflow=2
+#     Flow Advection Form: Conservative       # iconvflow=1
+#}
+     Surface ID for Integrated Mass: 0
+     Number of Force Surfaces: 1
+     Surface ID's for Force Calculation: 1  
+
+TURBULENCE MODELING PARAMETERS  
+{  #                                  lines below are only read if ||| is true
+	Dynamic Model Type : Standard   # adds zero to iturb       LES
+        Filter Integration Rule: 1  #ifrule adds ifrule-1 to iturb LES
+#	Turbulence Wall Model Type: None  #itwmod=0                RANSorLES
+#	Turbulence Wall Model Type: Slip Velocity  #itwmod=1       RANSorLES
+	Turbulence Wall Model Type: Effective Viscosity  #itwmod=2 RANSorLES
+	Velocity Averaging Steps : 500. # wtavei= 1/this           RANSorLES
+	Dynamic Model Averaging Steps : 500. # dtavei= 1/this      LES
+#  negative values to the two previous entries make their value ISTEP in code
+#  Anil...leave as any negative value
+	Filter Width Ratio        : 3.  # fwr1                     LES
+ 	}
+#
+#
+#This last one is brand new.  It allows you to construct your step 
+#from elementary operations.  It works under the premise that a step is
+#constructed from from a series of solves and updates.  The table goes like
+#this:
+#     solve flow =  0;             update flow =  1
+# solve scalar 1 = 10;         update scalar 1 = 11    
+# solve scalar 2 = 20;         update scalar 2 = 21    
+# solve scalar 3 = 30;         update scalar 3 = 31
+#              :                             :
+# solve scalar n = n*10;       update scalar n = n*10+1
+# solve heat     = (n+1)*10;          update T = (n+1)*10+1
+#
+
+#  Below we have an example of solving the flow with two iterations
+# (solve, update, solve,update) what would have been achieve before by
+# setting niter=2
+
+#
+#STEP SEQUENCE 
+
+	Step Construction :  0 1 0 1 0 1 
+
+#{
+#      Step Construction  : 0 1 0 1 0 1 0 1 0 1 0 1 0 1  # this is the standard seven iteration
+#      Step Construction  : 0 1 0 1 0 1 0 1 0 1 0 1 # this is the standard six iteration
+#      Step Construction  : 0 1 0 1 0 1 0 1 0 1   # this is the standard five iteration
+#      Step Construction  : 0 1 0 1 0 1 0 1   # this is the standard four iteration
+#      Step Construction  : 0 1 0 1 0 1  # this is the standard three iteration
+#      Step Construction  : 0 1 0 1    # this is the standard two iteration
+#     Step Construction  : 0 1 0 1 0 1 0 1 0 1  
+#     Step Construction  : 0 1       # this is the standard one iteration 
+#      Step Construction  : 0 1 10 11
+#      Step Construction  : 0 1 10 11 0 1 10 11 0 1 10 11 20 21 20 21 20 21
+# This one is one Tony might like where the solver would solve the flow with 
+# the first scalar (3 times with an update immediately after each solve) 
+# followed by 3 successive solves of the second scalar (with an update after 
+# each solve)
+#
+
+
+# NOTE: An update consists of adding the delta from the appropriate
+# solve to the appropriate part of the Y vector, followed by
+# reapplication of the boundary conditions. You have to ask for an
+# update. It is not implicit that it will follow each solve.  This is to
+# enable you to solve successive pieces BEFORE updating the solution as
+# is sometimes convenient/necessary. Here is an example of that
+
+#      Step Construction  : 0 1 10 20 11 21 0 1 10 20 11 21
+# here we solve the flow, update the flow, solve scalar 1, solve scalar 2 (BEFORE UPDATING SCALAR 1) then update both scalars,  then repeat the process
+
+ 
+#}
+
+
+
+
+
+
